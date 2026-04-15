@@ -64,10 +64,9 @@ class _FundsPageState extends State<FundsPage> {
         position: TooltipActionPosition.outside,
       ),
       globalTooltipActions: [
-        // Se elimina el TooltipActionButton de tipo previous
         TooltipActionButton(
           type: TooltipDefaultActionType.next,
-          // Ocultamos el botón "Siguiente" dinámicamente según el último paso posible
+          // Oculta el botón "Siguiente" dinámicamente según el último paso posible
           hideActionWidgetForShowcase: [
             _balanceShowcaseKey,
             _cancelShowcaseKey,
@@ -78,7 +77,7 @@ class _FundsPageState extends State<FundsPage> {
       ],
     );
 
-    // Verificamos si ya hay datos en caché para iniciar el showcase inmediatamente
+    // Verifica si ya hay datos en caché para iniciar el showcase inmediatamente
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _checkAndStartShowcase(context.read<FundsCubit>().state);
@@ -102,7 +101,7 @@ class _FundsPageState extends State<FundsPage> {
 
     _hasShownShowcase = true;
 
-    // Construimos la lista de llaves de forma dinámica basada en el estado
+    // Construye la lista de llaves de forma dinámica basada en el estado
     final keysToStart = <GlobalKey>[
       _historyShowcaseKey,
       _balanceShowcaseKey,
@@ -166,7 +165,7 @@ class _FundsPageState extends State<FundsPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Pre-calculamos los índices para evitar lógicas pesadas o estados mutables
+          // Pre-calcula los índices para evitar lógicas pesadas o estados mutables
           // durante la construcción de la lista.
           final firstIndex = state.funds.isNotEmpty ? 0 : -1;
           final firstUnsubIndex = state.funds.indexWhere(
@@ -243,7 +242,7 @@ class _FundsPageState extends State<FundsPage> {
                     );
 
                     // Composición limpia para evitar anidamiento excesivo.
-                    // Envolvemos condicionalmente solo las tarjetas objetivo.
+                    // Envuelve condicionalmente solo las tarjetas objetivo.
                     if (index == firstSubIndex) {
                       cardWidget = Showcase(
                         key: _cancelShowcaseKey,
