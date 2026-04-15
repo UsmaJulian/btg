@@ -16,7 +16,7 @@ Antes de comenzar, asegúrate de tener instalado:
 1. **Clonar el repositorio:**
 
    ```sh
-   git clone <url-del-repositorio>
+   git clone https://github.com/UsmaJulian/btg.git
    cd btg
    ```
 
@@ -125,16 +125,3 @@ La aplicación está preparada para multi-idioma. Si realizas cambios en los arc
 ```sh
 flutter gen-l10n
 ```
-
-```
-
-```
-
----
-
-## 🌐 Internacionalización (l10n)
-
-La aplicación está preparada para multi-idioma. Si realizas cambios en los archivos `.arb`:
-
-```sh
-flutter gen-l10n
