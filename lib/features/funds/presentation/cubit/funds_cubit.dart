@@ -11,8 +11,16 @@ import 'package:injectable/injectable.dart';
 
 part 'funds_state.dart';
 
+/// {@template funds_cubit}
+/// Manejador de la lógica de negocio para la gestión de fondos de inversión.
+///
+/// Este [Cubit] coordina la carga de fondos disponibles, el saldo de la billetera
+/// y las operaciones de suscripción o cancelación, interactuando con la capa
+/// de dominio a través de múltiples casos de uso.
+/// {@endtemplate}
 @injectable
 class FundsCubit extends Cubit<FundsState> {
+  /// {@macro funds_cubit}
   FundsCubit({
     required GetFundsUsecase getFundsUsecase,
     required SubscribeFundUsecase subscribeFundUsecase,
@@ -29,6 +37,12 @@ class FundsCubit extends Cubit<FundsState> {
   final CancelFundUsecase _cancelFundUsecase;
   final GetWalletUsecase _getWalletUsecase;
 
+  /// {@template load_funds}
+  /// Carga de forma concurrente la lista de fondos y el estado de la billetera.
+  ///
+  /// Actualiza el estado a [FundsStatus.loading] y, tras la respuesta de los
+  /// casos de uso, emite [FundsStatus.loaded] o [FundsStatus.error].
+  /// {@endtemplate}
   Future<void> loadFunds() async {
     emit(state.copyWith(status: FundsStatus.loading, clearError: true));
 
@@ -61,6 +75,10 @@ class FundsCubit extends Cubit<FundsState> {
     }
   }
 
+  /// Gestiona la suscripción del usuario a un fondo específico.
+  ///
+  /// Requiere el [fundId] y el [notificationMethod]. En caso de éxito,
+  /// refresca la información global de fondos.
   Future<void> subscribeToFund({
     required String fundId,
     required String notificationMethod,
@@ -84,6 +102,7 @@ class FundsCubit extends Cubit<FundsState> {
     }
   }
 
+  /// Cancela una suscripción activa a un fondo.
   Future<void> cancelFund({required String fundId}) async {
     emit(state.copyWith(status: FundsStatus.loading, clearError: true));
 

@@ -4,7 +4,13 @@ import 'package:btg/features/funds/domain/entities/fund.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+/// {@template fund_detail_page}
+/// Página de detalle que muestra la información extendida de un fondo.
+///
+/// Recibe la entidad [Fund] a través del objeto extra del router.
+/// {@endtemplate}
 class FundDetailPage extends StatelessWidget {
+  /// {@macro fund_detail_page}
   const FundDetailPage({super.key});
 
   @override
@@ -46,16 +52,13 @@ class FundDetailPage extends StatelessWidget {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: categoryColor.shade50,
+                            color: categoryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: categoryColor.shade200),
                           ),
                           child: Icon(
-                            isFpv
-                                ? Icons.savings_outlined
-                                : Icons.account_balance_outlined,
-                            color: categoryColor.shade700,
-                            size: 28,
+                            isFpv ? Icons.account_balance : Icons.trending_up,
+                            color: categoryColor,
+                            size: 32,
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -64,32 +67,19 @@ class FundDetailPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                fund.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
+                                fund.category.name.toUpperCase(),
+                                style: TextStyle(
+                                  color: categoryColor,
                                   fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                  fontSize: 12,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 3,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: categoryColor.shade50,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: categoryColor.shade200,
-                                  ),
-                                ),
-                                child: Text(
-                                  fund.category.name.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: categoryColor.shade700,
-                                  ),
+                              Text(
+                                fund.name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
@@ -97,56 +87,27 @@ class FundDetailPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Estado de suscripción
-            _StatusBanner(isSubscribed: fund.isSubscribed),
-
-            const SizedBox(height: 16),
-
-            // Detalles del fondo
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Información del fondo',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Divider(),
                     ),
-                    const Divider(height: 24),
                     _DetailRow(
-                      icon: Icons.attach_money,
-                      label: 'Monto mínimo de inversión',
+                      icon: Icons.monetization_on_outlined,
+                      label: 'Monto mínimo de vinculación',
                       value: CurrencyFormatter.format(fund.minAmount),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
                     _DetailRow(
-                      icon: Icons.category_outlined,
-                      label: 'Tipo de fondo',
-                      value: isFpv
-                          ? 'FPV — Fondo de Pensiones Voluntarias'
-                          : 'FIC — Fondo de Inversión Colectiva',
-                    ),
-                    const SizedBox(height: 12),
-                    _DetailRow(
-                      icon: Icons.tag,
-                      label: 'Identificador',
+                      icon: Icons.fingerprint,
+                      label: 'Identificador del fondo',
                       value: fund.id,
                     ),
                   ],
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+            _SubscriptionStatus(isSubscribed: fund.isSubscribed),
           ],
         ),
       ),
@@ -154,25 +115,24 @@ class FundDetailPage extends StatelessWidget {
   }
 }
 
-class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.isSubscribed});
+class _SubscriptionStatus extends StatelessWidget {
+  const _SubscriptionStatus({required this.isSubscribed});
 
   final bool isSubscribed;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isSubscribed
-            ? AppTheme.success.withValues(alpha: 0.1)
-            : AppTheme.textSecondary.withValues(alpha: 0.08),
+            ? AppTheme.success.withOpacity(0.1)
+            : AppTheme.textSecondary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSubscribed
-              ? AppTheme.success.withValues(alpha: 0.3)
-              : AppTheme.textSecondary.withValues(alpha: 0.2),
+              ? AppTheme.success.withOpacity(0.2)
+              : AppTheme.textSecondary.withOpacity(0.1),
         ),
       ),
       child: Row(

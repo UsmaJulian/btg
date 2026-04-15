@@ -3,9 +3,14 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Datasource local para wallet/saldo
+/// {@template wallet_local_datasource}
+/// Datasource local para wallet/saldo.
+///
+/// Gestiona la persistencia del balance del usuario utilizando [SharedPreferences].
+/// {@endtemplate}
 @lazySingleton
 class WalletLocalDatasource {
+  /// {@macro wallet_local_datasource}
   WalletLocalDatasource(this._prefs);
 
   final SharedPreferences _prefs;
@@ -13,7 +18,9 @@ class WalletLocalDatasource {
   static const String _walletKey = 'wallet';
   static const double _initialBalance = 500000; // COP $500.000
 
-  /// Obtiene el saldo actual
+  /// {@template get_balance}
+  /// Obtiene el saldo actual del usuario. Si no existe, inicializa con [_initialBalance].
+  /// {@endtemplate}
   Future<double> getBalance() async {
     final json = _prefs.getString(_walletKey);
     if (json == null) {
@@ -29,7 +36,9 @@ class WalletLocalDatasource {
     return (decoded['balance'] as num).toDouble();
   }
 
-  /// Resta monto (para suscripcion)
+  /// {@template deduct_amount}
+  /// Resta un monto específico del saldo actual (para procesos de suscripción).
+  /// {@endtemplate}
   Future<void> deductAmount(double amount) async {
     final current = await getBalance();
     final newBalance = current - amount;
@@ -39,7 +48,9 @@ class WalletLocalDatasource {
     );
   }
 
-  /// Suma monto (para cancelacion)
+  /// {@template add_amount}
+  /// Suma un monto específico al saldo actual (para procesos de cancelación/reembolso).
+  /// {@endtemplate}
   Future<void> addAmount(double amount) async {
     final current = await getBalance();
     final newBalance = current + amount;

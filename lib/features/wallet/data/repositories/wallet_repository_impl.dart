@@ -5,9 +5,15 @@ import 'package:btg/features/wallet/domain/entities/wallet.dart';
 import 'package:btg/features/wallet/domain/repositories/i_wallet_repository.dart';
 import 'package:injectable/injectable.dart';
 
-/// Implementacion del repositorio de wallet
+/// {@template wallet_repository_impl}
+/// Implementación del repositorio de wallet utilizando [WalletLocalDatasource].
+///
+/// Gestiona la persistencia del saldo disponible para realizar transacciones
+/// de fondos de inversión.
+/// {@endtemplate}
 @LazySingleton(as: IWalletRepository)
 class WalletRepositoryImpl implements IWalletRepository {
+  /// {@macro wallet_repository_impl}
   WalletRepositoryImpl(this._datasource);
 
   final WalletLocalDatasource _datasource;

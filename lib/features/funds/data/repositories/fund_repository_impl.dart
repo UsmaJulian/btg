@@ -9,9 +9,12 @@ import 'package:btg/features/wallet/data/datasources/wallet_local_datasource.dar
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 
+/// {@template fund_repository_impl}
 /// Implementacion del repositorio de fondos
+/// {@endtemplate}
 @LazySingleton(as: IFundsRepository)
 class FundRepositoryImpl implements IFundsRepository {
+  /// {@macro fund_repository_impl}
   FundRepositoryImpl(
     this._fundsDatasource,
     this._walletDatasource,
@@ -23,6 +26,9 @@ class FundRepositoryImpl implements IFundsRepository {
   final ITransactionsRepository _transactionsRepository;
   final _uuid = const Uuid();
 
+  /// {@template get_funds_impl}
+  /// Obtiene la lista de fondos disponibles procesando posibles errores de caché.
+  /// {@endtemplate}
   @override
   Future<Result<List<Fund>>> getFunds() async {
     try {
@@ -33,6 +39,9 @@ class FundRepositoryImpl implements IFundsRepository {
     }
   }
 
+  /// {@template subscribe_to_fund_impl}
+  /// Ejecuta el flujo de suscripción a un fondo, validando el estado previo y el saldo.
+  /// {@endtemplate}
   @override
   Future<Result<Transaction>> subscribeToFund({
     required String fundId,
@@ -85,6 +94,9 @@ class FundRepositoryImpl implements IFundsRepository {
     }
   }
 
+  /// {@template cancel_fund_impl}
+  /// Ejecuta el flujo de cancelación de un fondo y gestiona el reembolso.
+  /// {@endtemplate}
   @override
   Future<Result<Transaction>> cancelFund({
     required String fundId,

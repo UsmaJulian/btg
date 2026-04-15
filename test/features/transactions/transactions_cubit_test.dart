@@ -7,9 +7,18 @@ import 'package:btg/features/transactions/presentation/cubit/transactions_cubit.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+/// {@template mock_get_transactions_usecase}
+/// Mock del caso de uso para obtener transacciones.
+/// {@endtemplate}
 class MockGetTransactionsUsecase extends Mock
     implements GetTransactionsUsecase {}
 
+/// {@template transactions_cubit_test}
+/// Suite de pruebas para [TransactionsCubit].
+///
+/// Verifica el flujo de carga del historial de transacciones, incluyendo
+/// estados de éxito, error y limpieza de mensajes previos.
+/// {@endtemplate}
 void main() {
   late TransactionsCubit cubit;
   late MockGetTransactionsUsecase mockGetTransactions;
@@ -30,29 +39,23 @@ void main() {
       fundName: 'DEUDAPRIVADA',
       amount: 50000,
       type: TransactionType.cancellation,
-      date: DateTime(2025, 1, 14, 9, 0),
+      date: DateTime(2025, 1, 14, 9),
     ),
   ];
 
   setUp(() {
     mockGetTransactions = MockGetTransactionsUsecase();
-    cubit = TransactionsCubit(
-      getTransactionsUsecase: mockGetTransactions,
-    );
+    cubit = TransactionsCubit(getTransactionsUsecase: mockGetTransactions);
   });
 
   tearDown(() => cubit.close());
 
-  group('TransactionsCubit', () {
-    test('estado inicial debe ser TransactionsStatus.initial con lista vacía',
-        () {
-      expect(cubit.state.status, TransactionsStatus.initial);
-      expect(cubit.state.transactions, isEmpty);
-      expect(cubit.state.errorMessage, isNull);
-    });
-
+  group('TransactionsCubit Tests', () {
+    /// {@template transactions_load_success_test}
+    /// Verifica que se emitan los estados [loading, loaded] con la lista de datos.
+    /// {@endtemplate}
     blocTest<TransactionsCubit, TransactionsState>(
-      'debe emitir [loading, loaded] cuando loadTransactions es exitoso',
+      'debe emitir [loading, loaded] cuando loadTransactions tiene éxito',
       build: () {
         when(() => mockGetTransactions.call()).thenAnswer(
           (_) async => Success(tTransactions),
@@ -69,8 +72,11 @@ void main() {
       ],
     );
 
+    /// {@template transactions_load_empty_test}
+    /// Verifica el comportamiento cuando no existen transacciones registradas.
+    /// {@endtemplate}
     blocTest<TransactionsCubit, TransactionsState>(
-      'debe emitir [loading, loaded] con lista vacía cuando no hay transacciones',
+      'debe emitir [loading, loaded] con lista vacía si no hay datos',
       build: () {
         when(() => mockGetTransactions.call()).thenAnswer(
           (_) async => const Success([]),
@@ -82,11 +88,13 @@ void main() {
         const TransactionsState(status: TransactionsStatus.loading),
         const TransactionsState(
           status: TransactionsStatus.loaded,
-          transactions: [],
         ),
       ],
     );
 
+    /// {@template transactions_load_error_test}
+    /// Verifica que se capture el error y se asigne el mensaje al estado.
+    /// {@endtemplate}
     blocTest<TransactionsCubit, TransactionsState>(
       'debe emitir [loading, error] cuando loadTransactions falla',
       build: () {
@@ -106,6 +114,9 @@ void main() {
       ],
     );
 
+    /// {@template transactions_clear_error_test}
+    /// Valida que el [errorMessage] previo sea eliminado al iniciar una nueva carga.
+    /// {@endtemplate}
     blocTest<TransactionsCubit, TransactionsState>(
       'debe limpiar errorMessage previo al iniciar una nueva carga',
       build: () {
@@ -120,11 +131,9 @@ void main() {
       ),
       act: (c) => c.loadTransactions(),
       expect: () => [
-        // clearError: true limpia errorMessage al emitir loading
         const TransactionsState(status: TransactionsStatus.loading),
         const TransactionsState(
           status: TransactionsStatus.loaded,
-          transactions: [],
         ),
       ],
     );

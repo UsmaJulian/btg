@@ -41,14 +41,20 @@ import '../../features/wallet/data/repositories/wallet_repository_impl.dart'
 import '../../features/wallet/domain/repositories/i_wallet_repository.dart'
     as _i955;
 import '../../features/wallet/domain/usecases/get_wallet_usecase.dart' as _i920;
+import 'shared_preferences_module.dart' as _i110;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
-  _i174.GetIt init({
+  Future<_i174.GetIt> init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
-  }) {
+  }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    final sharedPreferencesModule = _$SharedPreferencesModule();
+    await gh.factoryAsync<_i460.SharedPreferences>(
+      () => sharedPreferencesModule.prefs,
+      preResolve: true,
+    );
     gh.lazySingleton<_i716.FundsLocalDatasource>(
       () => _i716.FundsLocalDatasource(gh<_i460.SharedPreferences>()),
     );
@@ -104,3 +110,5 @@ extension GetItInjectableX on _i174.GetIt {
     return this;
   }
 }
+
+class _$SharedPreferencesModule extends _i110.SharedPreferencesModule {}

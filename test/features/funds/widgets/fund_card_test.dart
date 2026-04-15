@@ -4,6 +4,12 @@ import 'package:btg/features/funds/presentation/widgets/fund_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// {@template fund_card_test}
+/// Pruebas unitarias y de widgets para [FundCard].
+///
+/// Verifica la correcta visualización de la información del fondo,
+/// los estados de suscripción y la interacción con los botones de acción.
+/// {@endtemplate}
 void main() {
   group('FundCard Widget Test', () {
     const tFund = Fund(
@@ -11,9 +17,11 @@ void main() {
       name: 'Fondo de Deuda',
       minAmount: 75000,
       category: FundCategory.fic,
-      isSubscribed: false,
     );
 
+    /// {@template fund_card_rendering_test}
+    /// Prueba la renderización inicial del card con datos base.
+    /// {@endtemplate}
     testWidgets('debe mostrar información básica del fondo', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -31,6 +39,9 @@ void main() {
       expect(find.text('SUSCRIBIRSE'), findsOneWidget);
     });
 
+    /// {@template fund_card_subscribed_state_test}
+    /// Verifica que el widget cambie visualmente cuando el fondo ya está suscrito.
+    /// {@endtemplate}
     testWidgets(
       'debe mostrar estado suscrito cuando fund.isSubscribed es true',
       (tester) async {
@@ -50,10 +61,13 @@ void main() {
       },
     );
 
+    /// {@template fund_card_interaction_test}
+    /// Valida que el callback [onSubscribe] se ejecute al interactuar con el botón.
+    /// {@endtemplate}
     testWidgets('debe llamar a onSubscribe cuando se presiona el botón', (
       tester,
     ) async {
-      bool called = false;
+      var called = false;
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

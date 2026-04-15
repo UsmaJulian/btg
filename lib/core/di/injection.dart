@@ -1,18 +1,20 @@
 import 'package:btg/core/di/injection.config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+/// {@template injection_instance}
+/// Punto de acceso global para el Service Locator del proyecto.
+/// {@endtemplate}
 final GetIt getIt = GetIt.instance;
 
+/// {@template configure_dependencies}
+/// Inicializa el grafo de dependencias de la aplicación utilizando [injectable].
+///
+/// Llama al método generado `init()` para registrar automáticamente todos los
+/// servicios, repositorios y bloques anotados con `@injectable`, `@lazySingleton` o `@module`.
+/// Debe ser invocado antes de ejecutar `runApp`.
+/// {@endtemplate}
 @InjectableInit(
   preferRelativeImports: true,
 )
-Future<void> configureDependencies() async {
-  // Registrar SharedPreferences manualmente antes de init
-  final prefs = await SharedPreferences.getInstance();
-  getIt.registerSingleton<SharedPreferences>(prefs);
-
-  // Inicializar injectable
-  getIt.init();
-}
+Future<void> configureDependencies() async => getIt.init();

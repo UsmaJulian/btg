@@ -6,7 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+/// {@template funds_page}
+/// Pantalla principal que visualiza el catálogo de fondos y el saldo del usuario.
+///
+/// Utiliza un [BlocConsumer] para reaccionar a cambios de estado emitiendo
+/// diálogos de error o reconstruyendo la lista de fondos de manera reactiva.
+/// {@endtemplate}
 class FundsPage extends StatelessWidget {
+  /// {@macro funds_page}
   const FundsPage({super.key});
 
   @override
@@ -23,6 +30,7 @@ class FundsPage extends StatelessWidget {
       ),
       body: BlocConsumer<FundsCubit, FundsState>(
         listener: (context, state) {
+          /// Monitoriza el estado para desplegar feedback visual en caso de error.
           if (state.status == FundsStatus.error && state.errorMessage != null) {
             _showErrorDialog(context, state.errorMessage!);
           }
@@ -34,7 +42,7 @@ class FundsPage extends StatelessWidget {
 
           return Column(
             children: [
-              // Header con saldo
+              /// Header que visualiza el saldo actual formateado.
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
@@ -60,7 +68,8 @@ class FundsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              // Lista de fondos
+
+              /// Listado dinámico de fondos utilizando tarjetas personalizadas.
               Expanded(
                 child: ListView.builder(
                   itemCount: state.funds.length,
@@ -68,10 +77,8 @@ class FundsPage extends StatelessWidget {
                     final fund = state.funds[index];
                     return FundCard(
                       fund: fund,
-                      onTap: () => context.push(
-                        '/funds/${fund.id}',
-                        extra: fund,
-                      ),
+                      onTap: () =>
+                          context.push('/funds/${fund.id}', extra: fund),
                       onSubscribe: () => _showSubscribeDialog(context, fund),
                       onCancel: fund.isSubscribed
                           ? () => _showCancelDialog(context, fund)
@@ -87,6 +94,7 @@ class FundsPage extends StatelessWidget {
     );
   }
 
+  /// Despliega el flujo de suscripción con selección de método de notificación.
   void _showSubscribeDialog(BuildContext context, Fund fund) {
     var notificationMethod = 'email';
     final fundsCubit = context.read<FundsCubit>();
@@ -96,7 +104,7 @@ class FundsPage extends StatelessWidget {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (statefulContext, setState) => AlertDialog(
-          title: Text('Suscribirse a ${fund.name}'),
+          title: Text('Suscripcion a ${fund.name}'),
           content: SizedBox(
             width: 400,
             child: Column(
@@ -136,7 +144,6 @@ class FundsPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Primero cerramos el diálogo para evitar reconstrucciones en medio del cambio de estado
                 Navigator.pop(dialogContext);
                 fundsCubit.subscribeToFund(
                   fundId: fund.id,
@@ -151,6 +158,7 @@ class FundsPage extends StatelessWidget {
     );
   }
 
+  /// Despliega el diálogo de confirmación para la cancelación de un fondo.
   void _showCancelDialog(BuildContext context, Fund fund) {
     final fundsCubit = context.read<FundsCubit>();
 
@@ -186,6 +194,7 @@ class FundsPage extends StatelessWidget {
     );
   }
 
+  /// Visualiza errores críticos en la operación del usuario.
   void _showErrorDialog(BuildContext context, String message) {
     showDialog<void>(
       context: context,

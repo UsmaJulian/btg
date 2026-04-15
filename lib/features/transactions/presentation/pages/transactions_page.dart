@@ -5,7 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+/// {@template transactions_page}
+/// Vista que presenta el historial cronológico de transacciones.
+///
+/// Muestra suscripciones (entradas al fondo) y cancelaciones (reembolsos al saldo).
+/// {@endtemplate}
 class TransactionsPage extends StatelessWidget {
+  /// {@macro transactions_page}
   const TransactionsPage({super.key});
 
   @override

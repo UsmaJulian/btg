@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
+/// {@template app_theme}
+/// Definición centralizada del sistema de diseño y temas de la aplicación.
+///
+/// Contiene la paleta de colores oficial, estilos tipográficos y la
+/// configuración de los componentes de Material Design 3 para asegurar
+/// una identidad visual cohesiva.
+/// {@endtemplate}
 class AppTheme {
+  /// {@template app_colors}
+  /// Paleta de colores primaria y de soporte.
+  /// {@endtemplate}
   static const Color primary = Color(0xFF170658);
   static const Color primaryLight = Color(0xFF2504CA);
   static const Color accent = Color(0xFF8966F0);
@@ -11,6 +21,12 @@ class AppTheme {
   static const Color textPrimary = Color(0xFF172B4D);
   static const Color textSecondary = Color(0xFF6B778C);
 
+  /// {@template light_theme}
+  /// Configuración del tema claro de la aplicación.
+  ///
+  /// Aplica [useMaterial3: true] y personaliza los temas de botones,
+  /// tarjetas y textos basándose en la paleta de colores institucional.
+  /// {@endtemplate}
   static ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(

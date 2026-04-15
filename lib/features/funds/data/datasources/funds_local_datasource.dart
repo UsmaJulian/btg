@@ -4,9 +4,12 @@ import 'package:btg/features/funds/data/models/fund_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// {@template funds_local_datasource}
 /// Datasource local para fondos (SharedPreferences)
+/// {@endtemplate}
 @lazySingleton
 class FundsLocalDatasource {
+  /// {@macro funds_local_datasource}
   FundsLocalDatasource(this._prefs);
 
   final SharedPreferences _prefs;
@@ -14,7 +17,9 @@ class FundsLocalDatasource {
   static const String _fundsKey = 'funds';
   static const String _subscriptionsKey = 'subscriptions';
 
+  /// {@template mock_funds}
   /// Datos mock de los 5 fondos requeridos
+  /// {@endtemplate}
   List<Map<String, dynamic>> get _mockFunds => [
     {
       'id': '1',
@@ -48,7 +53,9 @@ class FundsLocalDatasource {
     },
   ];
 
-  /// Obtiene todos los fondos con estado de suscripcion
+  /// {@template get_funds}
+  /// Obtiene la lista de fondos desde el almacenamiento local.
+  /// {@endtemplate}
   Future<List<FundModel>> getFunds() async {
     final fundsJson = _prefs.getString(_fundsKey);
     if (fundsJson == null) {
@@ -67,13 +74,17 @@ class FundsLocalDatasource {
     }).toList();
   }
 
+  /// {@template is_subscribed}
   /// Verifica si esta suscrito a un fondo
+  /// {@endtemplate}
   Future<bool> isSubscribed(String fundId) async {
     final subscriptions = await _getSubscriptions();
     return subscriptions.contains(fundId);
   }
 
+  /// {@template subscribe}
   /// Agrega una suscripcion
+  /// {@endtemplate}
   Future<void> subscribe(String fundId) async {
     final subscriptions = await _getSubscriptions();
     subscriptions.add(fundId);
@@ -83,7 +94,9 @@ class FundsLocalDatasource {
     );
   }
 
+  /// {@template unsubscribe}
   /// Elimina una suscripcion
+  /// {@endtemplate}
   Future<void> unsubscribe(String fundId) async {
     final subscriptions = await _getSubscriptions();
     subscriptions.remove(fundId);

@@ -2,7 +2,14 @@ import 'package:btg/core/utils/currency_formatter.dart';
 import 'package:btg/features/funds/domain/entities/fund.dart';
 import 'package:flutter/material.dart';
 
+/// {@template fund_card}
+/// Componente visual que representa la información resumida de un fondo de inversión.
+///
+/// Presenta detalles clave como el nombre, la categoría, el monto mínimo y
+/// el estado de suscripción del usuario, permitiendo acciones interactivas.
+/// {@endtemplate}
 class FundCard extends StatelessWidget {
+  /// {@macro fund_card}
   const FundCard({
     required this.fund,
     this.onSubscribe,
@@ -11,9 +18,16 @@ class FundCard extends StatelessWidget {
     super.key,
   });
 
+  /// Entidad de fondo que contiene los datos a mostrar.
   final Fund fund;
+
+  /// Callback ejecutado cuando el usuario presiona el botón de suscripción.
   final VoidCallback? onSubscribe;
+
+  /// Callback ejecutado cuando el usuario decide cancelar una suscripción activa.
   final VoidCallback? onCancel;
+
+  /// Callback para la navegación al detalle del fondo.
   final VoidCallback? onTap;
 
   @override
@@ -43,6 +57,8 @@ class FundCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
+
+                  /// Etiqueta visual de categoría (FPV / FIC).
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -78,6 +94,8 @@ class FundCard extends StatelessWidget {
                 style: TextStyle(color: Colors.grey.shade700, fontSize: 14),
               ),
               const SizedBox(height: 20),
+
+              /// Visualización condicional según el estado de suscripción.
               if (fund.isSubscribed)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
