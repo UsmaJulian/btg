@@ -1,4 +1,5 @@
 import 'package:btg/core/result/result.dart';
+import 'package:btg/core/utils/currency_formatter.dart';
 import 'package:btg/features/funds/domain/entities/fund.dart';
 import 'package:btg/features/funds/presentation/cubit/funds_cubit.dart';
 import 'package:btg/features/funds/presentation/pages/funds_page.dart';
@@ -59,7 +60,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // 2. Verificar saldo inicial en pantalla
-    expect(find.text('COP \$500000'), findsOneWidget);
+    expect(find.text(CurrencyFormatter.format(500000)), findsOneWidget);
 
     // 3. Abrir diálogo de suscripción
     await tester.tap(find.text('SUSCRIBIRSE'));

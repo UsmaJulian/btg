@@ -1,4 +1,5 @@
 import 'package:btg/core/router/router.dart';
+import 'package:btg/core/theme/app_theme.dart';
 import 'package:btg/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +15,7 @@ class _AppState extends State<App> with RouterMixin {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: router,

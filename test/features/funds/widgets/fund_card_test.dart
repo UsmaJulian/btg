@@ -1,3 +1,4 @@
+import 'package:btg/core/utils/currency_formatter.dart';
 import 'package:btg/features/funds/domain/entities/fund.dart';
 import 'package:btg/features/funds/presentation/widgets/fund_card.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,10 @@ void main() {
       );
 
       expect(find.text('Fondo de Deuda'), findsOneWidget);
-      expect(find.text('Monto mínimo: COP \$75000'), findsOneWidget);
+      expect(
+        find.text('Monto mínimo: ${CurrencyFormatter.format(75000)}'),
+        findsOneWidget,
+      );
       expect(find.text('SUSCRIBIRSE'), findsOneWidget);
     });
 

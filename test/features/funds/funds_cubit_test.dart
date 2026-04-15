@@ -6,6 +6,7 @@ import 'package:btg/features/funds/domain/usecases/cancel_fund_usecase.dart';
 import 'package:btg/features/funds/domain/usecases/get_funds_usecase.dart';
 import 'package:btg/features/funds/domain/usecases/subscribe_fund_usecase.dart';
 import 'package:btg/features/funds/presentation/cubit/funds_cubit.dart';
+import 'package:btg/features/transactions/domain/entities/transaction.dart';
 import 'package:btg/features/wallet/domain/entities/wallet.dart';
 import 'package:btg/features/wallet/domain/usecases/get_wallet_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,7 +35,7 @@ void main() {
       category: FundCategory.fpv,
     ),
   ];
-  final tWallet = const Wallet(balance: 500000);
+  const tWallet = Wallet(balance: 500000);
 
   setUp(() {
     mockGetFunds = MockGetFundsUsecase();
@@ -59,7 +60,7 @@ void main() {
         ).thenAnswer((_) async => Success(tFunds));
         when(
           () => mockGetWallet.call(),
-        ).thenAnswer((_) async => Success(tWallet));
+        ).thenAnswer((_) async => const Success(tWallet));
         return cubit;
       },
       act: (cubit) => cubit.loadFunds(),
@@ -92,6 +93,35 @@ void main() {
               state.status == FundsStatus.error &&
               state.errorMessage!.contains('Saldo insuficiente'),
         ),
+      ],
+    );
+
+    blocTest<FundsCubit, FundsState>(
+      'debe recargar fondos después de una cancelación exitosa',
+      build: () {
+        final tTransaction = Transaction(
+          id: 'tx1',
+          fundId: '1',
+          fundName: 'Fondo Test',
+          amount: 50000,
+          type: TransactionType.cancellation,
+          date: DateTime.now(),
+        );
+        when(
+          () => mockCancel.call(fundId: any(named: 'fundId')),
+        ).thenAnswer((_) async => Success(tTransaction));
+        when(
+          () => mockGetFunds.call(),
+        ).thenAnswer((_) async => Success(tFunds));
+        when(
+          () => mockGetWallet.call(),
+        ).thenAnswer((_) async => const Success(tWallet));
+        return cubit;
+      },
+      act: (cubit) => cubit.cancelFund(fundId: '1'),
+      expect: () => [
+        const FundsState(status: FundsStatus.loading),
+        FundsState(status: FundsStatus.loaded, funds: tFunds, balance: 500000),
       ],
     );
   });
